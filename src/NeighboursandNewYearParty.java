@@ -1,82 +1,48 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class NeighboursandNewYearParty {
 
 	public static void main(String[] args) {
 
 		Scanner in = new Scanner(System.in);
-
-		System.out.println("Enter number of test cases.");
 		int numberOfTestCases = in.nextInt();
 
 		for (int j = 0; j < numberOfTestCases; j++) {
-			System.out.println("Enter integers/ticket distributed for test case -- " + j);
 			int numberOfHousesOrTicketsDistributed = in.nextInt();
-
-			System.out.println("Enter numbers -- ");
 
 			int[] ticketsArray = new int[numberOfHousesOrTicketsDistributed];
 			for (int i = 0; i < numberOfHousesOrTicketsDistributed; i++) {
 				ticketsArray[i] = in.nextInt();
 			}
 
-			int max = FindMaxSum(ticketsArray, numberOfHousesOrTicketsDistributed);
-
-			System.out.println("max -- " + max);
-
+			FindMaxSumElements(ticketsArray, numberOfHousesOrTicketsDistributed);
 		}
-
 		in.close();
-
 	}
 
-	// if first number is negative start from 1 itself
-	// if first is positive start from first in excel and then in incl list
+	static void FindMaxSumElements(int a[], int n) {
 
-	static int FindMaxSum(int arr[], int n) {
+		int[][] dp = new int[n][2];
+		dp[0][0] = 0;
+		dp[0][1] = a[0];
 
-		int incl = arr[0];
-		int excl = 0;
-		int excl_new;
-		int i;
+		for (int i = 1; i < n; i++) {
+			dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);
+			dp[i][1] = a[i] + dp[i - 1][0];
+		}
 
-		List<Integer> incList = new LinkedList<>();
-
-		List<Integer> excList = new LinkedList<>();
-
-		for (i = 1; i < n; i++) {
-
-			if (incl > excl) {
-				excl_new = incl;
+		int ptr = n - 1;
+		while (ptr >= 0) {
+			if (dp[ptr][1] > dp[ptr][0]) {
+				System.out.print(a[ptr]);
+				ptr -= 2;
 			} else {
-				excl_new = excl;
+				ptr--;
 			}
-
-			int a = arr[i];
-			incl = excl + a;
-			excList.add(excl);
-			excl = excl_new;
-
-			incList.add(incl);
-			
-
 		}
+		System.out.println();
 
-		System.out.println(incList);
-		System.out.println(excList);
-
-		if (incl > excl) {
-			return incl;
-		} else {
-			return excl;
-		}
+		// return Math.max(dp[n - 1][0], dp[n - 1][1]);
 	}
 
 }
